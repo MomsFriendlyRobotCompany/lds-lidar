@@ -1,0 +1,5 @@
+build
+old
+*.pyc
+.DS_Store
+._*
