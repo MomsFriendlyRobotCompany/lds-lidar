@@ -122,6 +122,7 @@ find_package(Boost REQUIRED system)
 include_directories(.)
 link_directories(build)
 list(APPEND ALL_LIBS "${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY}")
+# list(APPEND ALL_LIBS "${PROJECT_NAME}")
 
 add_library(${PROJECT_NAME} SHARED lds_driver.cpp)
 target_link_libraries(${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY})

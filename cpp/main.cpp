@@ -3,16 +3,24 @@
 
 int main(int argc, char **argv)
 {
-  std::string port;
-  int baud_rate;
+  std::string port = "/dev/ttyUSB0";
+  int baud_rate = 230400;
   uint16_t rpms;
-  port = "/dev/ttyUSB0";
-  baud_rate = 230400;
+  // port = "/dev/ttyUSB0";
+  // baud_rate = 230400;
   boost::asio::io_service io;
 
   try
   {
-    lds::LFCDLaser laser(port, baud_rate, io);
+
+    // return 0;
+
+    lds::LFCDLaser laser(io);
+
+    // return 0;
+
+    laser.open(port, baud_rate);
+    laser.motor(true);
 
     while (1)
     {
