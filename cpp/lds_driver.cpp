@@ -79,10 +79,11 @@ void LFCDLaser::close(){
 }
 
 void LFCDLaser::motor(bool val){
-    char start[] = {'b'};
-    char stop[] = {'e'};
-    if (val) asio::write(serial_, asio::buffer(start, 1));  // start motor
-    else asio::write(serial_, asio::buffer(stop, 1));  // stop motor
+    // char start[] = {'b'};
+    // char stop[] = {'e'};
+    if (val) asio::write(serial_, asio::buffer("b", 1));  // start motor
+    else asio::write(serial_, asio::buffer("e", 1));  // stop motor
+    msleep(250);
 }
 
 void LFCDLaser::poll(){
@@ -145,9 +146,6 @@ void LFCDLaser::poll(){
 
                       // Remaining bits are the range in mm
                       uint16_t intensity = (byte1 << 8) + byte0;
-
-                      // Last two bytes represent the uncertanty or intensity, might also be pixel area of target...
-                      // uint16_t intensity = (byte3 << 8) + byte2;
                       uint16_t range = (byte3 << 8) + byte2;
 
                       // scan->ranges[359-index] = range / 1000.0;
@@ -159,10 +157,7 @@ void LFCDLaser::poll(){
 
             // scan->time_increment = motor_speed/good_sets/1e8;
           }
-          else
-          {
-            start_count = 0;
-          }
+          else start_count = 0;
         }
     }
 }
