@@ -1,41 +1,7 @@
-/*******************************************************************************
-* Copyright (c) 2016, Hitachi-LG Data Storage
-* Copyright (c) 2017, ROBOTIS
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* * Redistributions of source code must retain the above copyright notice, this
-*   list of conditions and the following disclaimer.
-*
-* * Redistributions in binary form must reproduce the above copyright notice,
-*   this list of conditions and the following disclaimer in the documentation
-*   and/or other materials provided with the distribution.
-*
-* * Neither the name of the copyright holder nor the names of its
-*   contributors may be used to endorse or promote products derived from
-*   this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*******************************************************************************/
-
- /* Authors: SP Kong, JH Yang, Pyo */
- /* maintainer: Pyo */
-
 #include "lds_driver.h"
-#include <chrono>
-#include <thread>  // sleep_for
-#include <iostream>
+#include <chrono>   // milliseconds
+#include <thread>   // sleep_for
+#include <iostream> // printing
 
 using namespace std;
 using namespace boost;
@@ -44,8 +10,8 @@ inline void msleep(int msec){ std::this_thread::sleep_for(std::chrono::milliseco
 
 namespace lds
 {
-// LFCDLaser::LFCDLaser(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io)
-LFCDLaser::LFCDLaser(boost::asio::io_service& io): shutting_down_(false), serial_(io, "/dev/ttyUSB0") {
+// LDS01::LDS01(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io)
+LDS01::LDS01(boost::asio::io_service& io): shutting_down_(false), serial_(io, "/dev/ttyUSB0") {
     // serial_(io);
     cout << ">> Laser: " << shutting_down_ << " " << endl;
     // serial_.set_option(boost::asio::serial_port_base::baud_rate(baud_rate_));
@@ -56,16 +22,16 @@ LFCDLaser::LFCDLaser(boost::asio::io_service& io): shutting_down_(false), serial
     // asio::write(serial_, asio::buffer("b", 1));  // start motor
 }
 
-LFCDLaser::~LFCDLaser(){
+LDS01::~LDS01(){
     // boost::asio::write(serial_, boost::asio::buffer("e", 1));  // stop motor
     // asio::write(serial_, asio::buffer("e", 1));  // stop motor
-    motor(false);
-    msleep(100);
+    // motor(false);
+    // msleep(100);
     close();
 
 }
 
-bool LFCDLaser::open(const std::string& port, uint32_t baud_rate){
+bool LDS01::open(const std::string& port, uint32_t baud_rate){
     // serial_.open(port);
     serial_.set_option(asio::serial_port_base::baud_rate(baud_rate));
 
@@ -73,20 +39,20 @@ bool LFCDLaser::open(const std::string& port, uint32_t baud_rate){
     return false;
 }
 
-void LFCDLaser::close(){
+void LDS01::close(){
     shutting_down_ = true;
+    motor(false);
+    msleep(100);
     if (serial_.is_open()) serial_.close();
 }
 
-void LFCDLaser::motor(bool val){
-    // char start[] = {'b'};
-    // char stop[] = {'e'};
+void LDS01::motor(bool val){
     if (val) asio::write(serial_, asio::buffer("b", 1));  // start motor
     else asio::write(serial_, asio::buffer("e", 1));  // stop motor
     msleep(250);
 }
 
-void LFCDLaser::poll(){
+void LDS01::poll(){
     uint8_t temp_char;
     uint8_t start_count = 0;
     bool got_scan = false;
@@ -150,6 +116,8 @@ void LFCDLaser::poll(){
 
                       // scan->ranges[359-index] = range / 1000.0;
                       // scan->intensities[359-index] = intensity;
+
+                      // FIXME: this should be filling an array
                       printf ("r[%d]=%f,",359-index, range / 1000.0);
                     }
                 }
@@ -162,31 +130,3 @@ void LFCDLaser::poll(){
     }
 }
 }
-
-// int main(int argc, char **argv)
-// {
-//   std::string port;
-//   int baud_rate;
-//   uint16_t rpms;
-//   port = "/dev/ttyUSB0";
-//   baud_rate = 230400;
-//   boost::asio::io_service io;
-//
-//   try
-//   {
-//     lds::LFCDLaser laser(port, baud_rate, io);
-//
-//     while (1)
-//     {
-//       laser.poll();
-//     }
-//     laser.close();
-//
-//     return 0;
-//   }
-//   catch (boost::system::system_error ex)
-//   {
-//     printf("An exception was thrown: %s", ex.what());
-//     return -1;
-//   }
-// }

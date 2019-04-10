@@ -124,7 +124,7 @@ link_directories(build)
 list(APPEND ALL_LIBS "${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY}")
 # list(APPEND ALL_LIBS "${PROJECT_NAME}")
 
-add_library(${PROJECT_NAME} SHARED lds_driver.cpp)
+add_library(${PROJECT_NAME} SHARED lds_driver.cpp SerialPort.cpp)
 target_link_libraries(${PROJECT_NAME} ${Boost_SYSTEM_LIBRARY})
 
 add_executable(lds-test main.cpp)
