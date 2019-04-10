@@ -11,7 +11,7 @@ inline void msleep(int msec){ std::this_thread::sleep_for(std::chrono::milliseco
 namespace lds
 {
 // LDS01::LDS01(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io)
-LDS01::LDS01(boost::asio::io_service& io): shutting_down_(false), serial_(io, "/dev/ttyUSB0") {
+LDS01::LDS01(boost::asio::io_service& io): shutting_down_(false), serial_(io, "/dev/ttyUSB0"), serial(io) {
     // serial_(io);
     cout << ">> Laser: " << shutting_down_ << " " << endl;
     // serial_.set_option(boost::asio::serial_port_base::baud_rate(baud_rate_));

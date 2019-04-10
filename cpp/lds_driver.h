@@ -3,9 +3,12 @@
 #include <boost/array.hpp>
 // #include <asio.hpp>
 // #include <array>
+#include "SerialPort.hpp"
 
 // using namespace boost;
 
+
+// FIXME: replace boost serial_port with SerialPort
 namespace lds
 {
 class LDS01
@@ -30,5 +33,6 @@ protected:
     // asio::serial_port serial_; ///< @brief Actual serial port object for reading/writing to the LFCD Laser Scanner
     uint16_t motor_speed_; ///< @brief current motor speed as reported by the LFCD.
     // boost::asio::io_service io;
+    SerialPort serial;
 };
 }
