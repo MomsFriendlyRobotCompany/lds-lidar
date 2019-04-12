@@ -23,6 +23,7 @@ public:
     void close();
     bool open(const std::string& port, uint32_t baud_rate);
 
+    // int write(char *s, uint16_t num){}
     int write(const std::string& s);
     int write(const std::vector<uint8_t>& buffer){}
     // void writeString(const std::string& s);

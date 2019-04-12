@@ -11,44 +11,29 @@ inline void msleep(int msec){ std::this_thread::sleep_for(std::chrono::milliseco
 namespace lds
 {
 // LDS01::LDS01(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io)
-LDS01::LDS01(boost::asio::io_service& io): shutting_down_(false), serial_(io, "/dev/ttyUSB0"), serial(io) {
-    // serial_(io);
-    cout << ">> Laser: " << shutting_down_ << " " << endl;
-    // serial_.set_option(boost::asio::serial_port_base::baud_rate(baud_rate_));
-    // serial_.set_option(asio::serial_port_base::baud_rate(baud_rate_));
-
-    // Below command is not required after firmware upgrade (2017.10)
-    // boost::asio::write(serial_, boost::asio::buffer("b", 1));  // start motor
-    // asio::write(serial_, asio::buffer("b", 1));  // start motor
-}
+LDS01::LDS01(): shutting_down_(false), serial(io) {}
 
 LDS01::~LDS01(){
-    // boost::asio::write(serial_, boost::asio::buffer("e", 1));  // stop motor
-    // asio::write(serial_, asio::buffer("e", 1));  // stop motor
-    // motor(false);
-    // msleep(100);
+    motor(false);
+    msleep(100);
     close();
 
 }
 
 bool LDS01::open(const std::string& port, uint32_t baud_rate){
-    // serial_.open(port);
-    serial_.set_option(asio::serial_port_base::baud_rate(baud_rate));
-
-    if (serial_.is_open()) return true;
-    return false;
+    return serial.open(port, baud_rate);
 }
 
 void LDS01::close(){
     shutting_down_ = true;
     motor(false);
     msleep(100);
-    if (serial_.is_open()) serial_.close();
+    serial.close();
 }
 
 void LDS01::motor(bool val){
-    if (val) asio::write(serial_, asio::buffer("b", 1));  // start motor
-    else asio::write(serial_, asio::buffer("e", 1));  // stop motor
+    if (val) serial.write("b");  // start motor
+    else serial.write("e");  // stop motor
     msleep(250);
 }
 
@@ -67,7 +52,7 @@ void LDS01::poll(){
     {
         // Wait until first data sync of frame: 0xFA, 0xA0
         // boost::asio::read(serial_, boost::asio::buffer(&raw_bytes[start_count],1));
-        asio::read(serial_, asio::buffer(&raw_bytes[start_count],1));
+        // asio::read(serial_, asio::buffer(&raw_bytes[start_count],1));
 
         if(start_count == 0){
             if(raw_bytes[start_count] == 0xFA) start_count = 1;
@@ -81,7 +66,7 @@ void LDS01::poll(){
                 got_scan = true;
 
                 // boost::asio::read(serial_,boost::asio::buffer(&raw_bytes[2], 2518));
-                asio::read(serial_, asio::buffer(&raw_bytes[2], 2518));
+                // asio::read(serial_, asio::buffer(&raw_bytes[2], 2518));
 
                 // scan->angle_min = 0.0;
                 // scan->angle_max = 2.0*M_PI;

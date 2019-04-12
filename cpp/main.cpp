@@ -8,10 +8,10 @@ int main(int argc, char **argv)
     uint16_t rpms;
     // port = "/dev/ttyUSB0";
     // baud_rate = 230400;
-    boost::asio::io_service io;
+    // boost::asio::io_service io;
 
     try {
-        lds::LDS01 laser(io);
+        lds::LDS01 laser;
 
         laser.open(port, baud_rate);
         laser.motor(true);
