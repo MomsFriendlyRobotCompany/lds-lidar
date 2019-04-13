@@ -14,7 +14,7 @@ public:
     LDS01();
     ~LDS01();
     void close();
-    bool open(const std::string& port, uint32_t baud_rate);
+    bool open(const std::string& port, uint32_t baud_rate=230400);
     void motor(bool value);
 
     bool read();

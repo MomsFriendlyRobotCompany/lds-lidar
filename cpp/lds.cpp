@@ -1,4 +1,4 @@
-#include "lds_driver.h"
+#include "lds/lds.hpp"
 #include <chrono>   // milliseconds
 #include <thread>   // sleep_for
 #include <iostream> // printing
@@ -53,8 +53,10 @@ bool LDS01::read(){
     while (byte != 0xFA){
         num = serial.read(1, buffer);
         if (num == 1) byte = buffer[0];
-        msleep(100);
-        // printf(">> wait %u\n", byte);
+        else {
+            msleep(1);
+            printf(">> wait %u\n", byte);
+        }
     }
     // printf(">> start\n");
 

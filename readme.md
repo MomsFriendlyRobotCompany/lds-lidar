@@ -2,7 +2,51 @@
 
 # LDS LIDAR
 
+## Install
 
+```
+mkdir build
+cd build
+cmake ..
+make
+make package
+dpkg -i lds-x.x.x-Linux.deb
+```
+
+## Example
+
+```c++
+#include <lds/lds.hpp>
+#include <string>
+
+using namespace std;
+using namespace lds;
+
+int main(int argc, char **argv) {
+    try {
+        string port = "/dev/ttyUSB0";
+        LDS01 laser;
+        laser.open(port);   // defaults to correct baud rate
+        laser.motor(true);  // start lidar spinning
+
+        int count = 5;  // grab 5 readings and stop
+
+        while (count--) {
+            laser.read();
+
+            printf("[LDS Ranges] -----------------------\n");
+            for (const auto r: laser.scan) printf("%.2f ", r / 1000.0);
+            printf("\n");
+        }
+
+        return 0;
+    }
+    catch (boost::system::system_error ex) {
+        printf("An exception was thrown: %s", ex.what());
+        return -1;
+    }
+}
+```
 
 # References
 

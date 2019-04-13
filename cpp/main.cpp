@@ -1,28 +1,21 @@
 
-#include "lds_driver.h"
+#include "lds/lds.hpp"
 #include <iostream>
 #include <unistd.h>
 
 using namespace std;
 
-int main(int argc, char **argv)
-{
-    std::string port = "/dev/ttyUSB0";
-    int baud_rate = 230400;
-    uint16_t rpms;
-    // port = "/dev/ttyUSB0";
-    // baud_rate = 230400;
-    // boost::asio::io_service io;
-
+int main(int argc, char **argv) {
     try {
         lds::LDS01 laser;
+        std::string port = "/dev/ttyUSB0";
+        // string port = "/dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_0001-if00-port0";
 
-
-        bool val = laser.open(port, baud_rate);
+        bool val = laser.open(port);
         cout << ">> open serial: " << val << endl;
-        laser.motor(false);
+        // laser.motor(false);
 
-        sleep(2);
+        // sleep(2);
         laser.motor(true);
 
         int count = 5;
@@ -30,14 +23,10 @@ int main(int argc, char **argv)
         while (count--) {
             laser.read();
 
-            printf("-----------------------\n");
+            printf("[LDS Ranges] -----------------------\n");
             for (const auto r: laser.scan) printf("%.2f ", r / 1000.0);
             printf("\n");
         }
-
-        // laser.close();
-
-        // sleep(1);
 
         return 0;
     }

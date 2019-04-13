@@ -39,61 +39,40 @@ int SerialPort::write(const string& s){
     return asio::write(serial, asio::buffer(s.c_str(),s.size()));
 }
 
-// int SerialPort::write(const std::string& s){}
 size_t SerialPort::read(const size_t number){
-    // uint8_t b[number];
     size_t len = asio::read(serial, asio::buffer(&buffer, number));
     return len;
 }
 
 size_t SerialPort::read(const size_t number, uint8_t *buff){
-    // uint8_t b[number];
     size_t len = asio::read(serial, asio::buffer(buff, number));
     return len;
 }
 
-// size_t SerialPort::read(const size_t number){
-//     // uint8_t b[number];
-//     size_t len = asio::read(serial, asio::buffer(&buffer, number));
-//     return len;
-// }
-
-// int SerialPort::read(string result){
-//     char c;
-//     // string result;
-//     // int num = 0;
-//     // for(;;){
-//     asio::read(serial, asio::buffer(&c,1));
-//     //     switch(c){
-//     //         case '\r':
-//     //             break;
-//     //         case '\n':
-//     //             return result.size();
-//     //         default:
-//     //             result += c;
-//     //     }
-//     // }
-//     return result.size();
-// }
-
-// void SerialPort::dtr(bool val){
-//     // serial.EnableDTR(val);
-// }
+void SerialPort::setPin(bool enabled, int pin){
+    int fd = serial.native_handle();
+    if (!enabled)
+        ioctl(fd, TIOCMBIC, &pin);
+    else
+        ioctl(fd, TIOCMBIS, &pin);
+}
 
 void SerialPort::setRTS(bool enabled){
-    int fd = serial.native_handle();
-    int data = TIOCM_RTS;
-    if (!enabled)
-        ioctl(fd, TIOCMBIC, &data);
-    else
-        ioctl(fd, TIOCMBIS, &data);
+    // int fd = serial.native_handle();
+    // int data = TIOCM_RTS;
+    // if (!enabled)
+    //     ioctl(fd, TIOCMBIC, &data);
+    // else
+    //     ioctl(fd, TIOCMBIS, &data);
+    setPin(enabled, TIOCM_RTS);
 }
 
 void SerialPort::setDTR(bool enabled){
-    int fd = serial.native_handle();
-    int data = TIOCM_DTR;
-    if (!enabled)
-        ioctl(fd, TIOCMBIC, &data);        // Clears the DTR pin
-    else
-        ioctl(fd, TIOCMBIS, &data);        // Sets the DTR pin
+    // int fd = serial.native_handle();
+    // int data = TIOCM_DTR;
+    // if (!enabled)
+    //     ioctl(fd, TIOCMBIC, &data);        // Clears the DTR pin
+    // else
+    //     ioctl(fd, TIOCMBIS, &data);        // Sets the DTR pin
+    setPin(enabled, TIOCM_DTR);
 }
