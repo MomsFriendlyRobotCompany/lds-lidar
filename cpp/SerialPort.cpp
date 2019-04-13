@@ -33,7 +33,21 @@ bool SerialPort::open(const string& port, uint32_t baud_rate){
         return false;
     }
 
-    boost::asio::serial_port_base::flow_control flow_control;
+    // boost::asio::serial_port_base::flow_control flow_control;
+    // serial.get_option(flow_control);
+    //
+    // boost::asio::serial_port_base::baud_rate gbaud_rate;
+    // serial.get_option(gbaud_rate);
+    //
+    //
+    // serial_port_base::stop_bits stop_bits;
+    // serial.get_option(stop_bits);
+    //
+    // serial_port_base::character_size character_size;
+    // serial.get_option(character_size);
+    //
+    // cout << flow_control.value() << " " << character_size.value() << " " << gbaud_rate.value() << " " << stop_bits.value() << endl;
+    // exit(0);
     return true;
 }
 
