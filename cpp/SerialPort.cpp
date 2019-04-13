@@ -32,6 +32,8 @@ bool SerialPort::open(const string& port, uint32_t baud_rate){
         cout << "*** SerialPort::open(): " << e.what() << endl;
         return false;
     }
+
+    boost::asio::serial_port_base::flow_control flow_control;
     return true;
 }
 
