@@ -23,7 +23,7 @@ public:
     void close();
     bool open(const std::string& port, uint32_t baud_rate);
 
-    // int write(uint8_t *s, uint16_t num){}
+    int write(uint8_t *s, const uint16_t num);
     int write(const std::string& s);
     //int write(const std::vector<uint8_t>& buffer){}
 
@@ -36,7 +36,6 @@ public:
     void setDTR(bool enabled);
 
 protected:
-    // boost::asio::io_service io;
     void setPin(bool enabled, int pin);
     boost::asio::serial_port serial;
     std::array<std::uint8_t, 1024> buffer;

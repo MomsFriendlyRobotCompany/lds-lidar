@@ -39,6 +39,10 @@ int SerialPort::write(const string& s){
     return asio::write(serial, asio::buffer(s.c_str(),s.size()));
 }
 
+int SerialPort::write(uint8_t *buff, const uint16_t num){
+    return asio::write(serial, asio::buffer(buff,num));
+}
+
 size_t SerialPort::read(const size_t number){
     size_t len = asio::read(serial, asio::buffer(&buffer, number));
     return len;
@@ -51,10 +55,10 @@ size_t SerialPort::read(const size_t number, uint8_t *buff){
 
 void SerialPort::setPin(bool enabled, int pin){
     int fd = serial.native_handle();
-    if (!enabled)
-        ioctl(fd, TIOCMBIC, &pin);
-    else
+    if (enabled)
         ioctl(fd, TIOCMBIS, &pin);
+    else
+        ioctl(fd, TIOCMBIC, &pin);
 }
 
 void SerialPort::setRTS(bool enabled){
