@@ -19,15 +19,16 @@ include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
 # kevin ---------------------------------------------------------
-include_directories(/home/kevin/.local/include)
-include_directories(/home/kevin/.local/include/gecko/zmq)
-link_directories(/home/kevin/.local/lib)
+# include_directories(/home/kevin/.local/include)
+# include_directories(/home/kevin/.local/include/gecko/zmq)
+# link_directories(/home/kevin/.local/lib)
 
 # gecko ---------------------------------------------------------
-# include_directories($ENV{HOME}/github/gecko/src)
-# include_directories($ENV{HOME}/github/gecko/msgpack)
-# include_directories($ENV{HOME}/github/gecko/zmq)
-# link_directories($ENV{HOME}/github/gecko/build)
+include_directories($ENV{HOME}/github/gecko/src)
+include_directories($ENV{HOME}/github)
+include_directories($ENV{HOME}/github/gecko)
+include_directories($ENV{HOME}/github/gecko/zmq)
+link_directories($ENV{HOME}/github/gecko/build)
 list(APPEND ALL_LIBS "gecko")
 
 if (NOT APPLE)
